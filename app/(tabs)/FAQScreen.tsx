@@ -14,6 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 import { faqs } from "../../data/faqs";
 
 export default function FAQScreen() {
+  const navigation = useNavigation();
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const toggleFAQ = (id: string) => {
@@ -30,33 +31,48 @@ export default function FAQScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
+      {/* Header — matches SearchScreen: back button + icon chip + title group */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.back()}>
-          <Icon name="arrow-back" size={24} color="#0b3b5c" />
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+        >
+          <Icon name="arrow-back" size={20} color="#0b3b5c" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>
-          <Icon name="help-circle" size={24} color="#0b3b5c" /> FAQ & Help
-        </Text>
+        <View style={styles.headerIconChip}>
+          <Icon name="help-circle-outline" size={18} color="#0B4D3A" />
+        </View>
+        <View style={styles.headerTextGroup}>
+          <Text style={styles.headerTitle}>FAQ & Help</Text>
+          <Text style={styles.headerSubtitle}>
+            Answers, guides, and ways to reach us
+          </Text>
+        </View>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
         {/* FAQ Section */}
-        <Text style={styles.sectionTitle}>
-          <Icon name="chatbubbles" size={18} color="#0b3b5c" /> Frequently Asked
-          Questions
-        </Text>
+        <View style={styles.sectionTitleRow}>
+          <Icon name="chatbubbles-outline" size={16} color="#0b3b5c" />
+          <Text style={styles.sectionTitle}>Frequently Asked Questions</Text>
+        </View>
 
         {faqs.map((faq) => (
           <View key={faq.id} style={styles.faqItem}>
             <TouchableOpacity
               style={styles.faqQuestion}
               onPress={() => toggleFAQ(faq.id)}
+              activeOpacity={0.7}
             >
               <Text style={styles.faqQuestionText}>{faq.question}</Text>
               <Icon
                 name={expandedId === faq.id ? "chevron-up" : "chevron-down"}
-                size={20}
-                color="#1a6d8a"
+                size={18}
+                color="#8a9eb0"
               />
             </TouchableOpacity>
             {expandedId === faq.id && (
@@ -69,10 +85,10 @@ export default function FAQScreen() {
 
         {/* Customer Assistance */}
         <View style={styles.assistanceCard}>
-          <Text style={styles.assistanceTitle}>
-            <Icon name="headset" size={20} color="#0b3b5c" /> Customer
-            Assistance
-          </Text>
+          <View style={styles.sectionTitleRow}>
+            <Icon name="headset-outline" size={16} color="#0b3b5c" />
+            <Text style={styles.assistanceTitle}>Customer Assistance</Text>
+          </View>
           <Text style={styles.assistanceText}>
             Need help? Our support team is here for you.
           </Text>
@@ -80,15 +96,17 @@ export default function FAQScreen() {
             <TouchableOpacity
               style={[styles.assistanceButton, styles.callButton]}
               onPress={handleCallSupport}
+              activeOpacity={0.85}
             >
-              <Icon name="call" size={20} color="white" />
+              <Icon name="call-outline" size={18} color="white" />
               <Text style={styles.assistanceButtonText}>Call Support</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.assistanceButton, styles.emailButton]}
               onPress={handleEmailSupport}
+              activeOpacity={0.85}
             >
-              <Icon name="mail" size={20} color="white" />
+              <Icon name="mail-outline" size={18} color="white" />
               <Text style={styles.assistanceButtonText}>Email Support</Text>
             </TouchableOpacity>
           </View>
@@ -96,9 +114,10 @@ export default function FAQScreen() {
 
         {/* NHIS Policy Guide */}
         <View style={styles.policyCard}>
-          <Text style={styles.policyTitle}>
-            <Icon name="book" size={18} color="#0b3b5c" /> NHIS Policy Guide
-          </Text>
+          <View style={styles.sectionTitleRow}>
+            <Icon name="book-outline" size={16} color="#0b3b5c" />
+            <Text style={styles.policyTitle}>NHIS Policy Guide</Text>
+          </View>
           <Text style={styles.policyText}>
             The National Health Insurance Scheme (NHIS) provides health
             insurance to Nigerians. Key benefits include:
@@ -136,8 +155,6 @@ export default function FAQScreen() {
             </View>
           </View>
         </View>
-
-        <View style={styles.footerSpace} />
       </ScrollView>
     </SafeAreaView>
   );
@@ -148,77 +165,107 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#f3f7fc",
   },
+
+  // Header — same shape as SearchScreen's header, with a back button added
   header: {
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 20,
-    paddingTop: 10,
-    paddingBottom: 16,
+    paddingTop: 8,
+    paddingBottom: 14,
+    gap: 10,
   },
-  headerTitle: {
-    fontSize: 22,
-    fontWeight: "700",
-    color: "#0b1a2e",
+  backButton: {
+    width: 34,
+    height: 34,
+    borderRadius: 10,
+    backgroundColor: "white",
+    borderWidth: 1,
+    borderColor: "#e6edf4",
+    alignItems: "center",
+    justifyContent: "center",
   },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "#0b1a2e",
-    marginHorizontal: 20,
+  headerIconChip: {
+    width: 34,
+    height: 34,
+    borderRadius: 10,
+    backgroundColor: "#eaf3ee",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  headerTextGroup: { flex: 1 },
+  headerTitle: { fontSize: 20, fontWeight: "800", color: "#0b1a2e" },
+  headerSubtitle: { fontSize: 11.5, color: "#8a9eb0", marginTop: 1 },
+
+  scrollContent: { paddingHorizontal: 20, paddingTop: 4, paddingBottom: 32 },
+
+  sectionTitleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 7,
     marginBottom: 12,
   },
+  sectionTitle: { fontSize: 15, fontWeight: "800", color: "#0b1a2e" },
+
+  // FAQ cards — restyled to match resultCard/procCard conventions
   faqItem: {
     backgroundColor: "white",
-    marginHorizontal: 20,
-    marginBottom: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 4,
+    marginBottom: 10,
+    paddingHorizontal: 14,
     borderRadius: 16,
-    borderWidth: 1,
-    borderColor: "#eef4f9",
+    borderWidth: 1.5,
+    borderColor: "transparent",
+    shadowColor: "#0b1a2e",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    elevation: 1,
   },
   faqQuestion: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 12,
+    paddingVertical: 14,
+    gap: 12,
   },
   faqQuestionText: {
-    fontSize: 15,
-    fontWeight: "600",
-    color: "#0b1a2e",
-    flex: 1,
-    marginRight: 12,
-  },
-  faqAnswer: {
-    paddingBottom: 16,
-    borderTopWidth: 1,
-    borderTopColor: "#eef4f9",
-    paddingTop: 12,
-  },
-  faqAnswerText: {
-    fontSize: 14,
-    color: "#4a5f72",
-    lineHeight: 22,
-  },
-  assistanceCard: {
-    backgroundColor: "#f0f7fe",
-    marginHorizontal: 20,
-    padding: 20,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: "#d0e0ec",
-    marginTop: 16,
-    marginBottom: 12,
-  },
-  assistanceTitle: {
-    fontSize: 18,
+    fontSize: 14.5,
     fontWeight: "700",
     color: "#0b1a2e",
-    marginBottom: 8,
+    flex: 1,
   },
+  faqAnswer: {
+    paddingBottom: 14,
+    borderTopWidth: 1,
+    borderTopColor: "#f2f5f8",
+    paddingTop: 10,
+  },
+  faqAnswerText: {
+    fontSize: 13,
+    color: "#6a7f92",
+    lineHeight: 20,
+  },
+
+  // Customer assistance card
+  assistanceCard: {
+    backgroundColor: "white",
+    padding: 16,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: "#eef4f9",
+    marginTop: 6,
+    marginBottom: 12,
+    shadowColor: "#0b1a2e",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    elevation: 1,
+  },
+  assistanceTitle: { fontSize: 15, fontWeight: "800", color: "#0b1a2e" },
   assistanceText: {
-    fontSize: 14,
-    color: "#4a5f72",
-    marginBottom: 16,
+    fontSize: 12.5,
+    color: "#8a9eb0",
+    marginBottom: 14,
   },
   assistanceButtons: {
     flexDirection: "row",
@@ -229,56 +276,57 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    padding: 14,
-    borderRadius: 14,
-    gap: 8,
+    paddingVertical: 12,
+    borderRadius: 12,
+    gap: 7,
   },
   callButton: {
     backgroundColor: "#0b3b5c",
   },
   emailButton: {
-    backgroundColor: "#1a6d8a",
+    backgroundColor: "#146c8f",
   },
   assistanceButtonText: {
     color: "white",
-    fontSize: 14,
-    fontWeight: "600",
+    fontSize: 12.5,
+    fontWeight: "700",
   },
+
+  // Policy card
   policyCard: {
     backgroundColor: "white",
-    marginHorizontal: 20,
-    padding: 20,
+    padding: 16,
     borderRadius: 16,
     borderLeftWidth: 4,
     borderLeftColor: "#0b3b5c",
-    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: "#eef4f9",
+    marginBottom: 4,
+    shadowColor: "#0b1a2e",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    elevation: 1,
   },
-  policyTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "#0b1a2e",
-    marginBottom: 8,
-  },
+  policyTitle: { fontSize: 15, fontWeight: "800", color: "#0b1a2e" },
   policyText: {
-    fontSize: 14,
-    color: "#4a5f72",
-    lineHeight: 22,
+    fontSize: 12.5,
+    color: "#6a7f92",
+    lineHeight: 19,
     marginBottom: 12,
   },
   policyList: {
-    gap: 8,
+    gap: 9,
   },
   policyItem: {
     flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
+    alignItems: "flex-start",
+    gap: 8,
   },
   policyItemText: {
-    fontSize: 14,
+    fontSize: 13,
     color: "#4a5f72",
     flex: 1,
-  },
-  footerSpace: {
-    height: 24,
+    lineHeight: 18,
   },
 });

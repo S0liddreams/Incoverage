@@ -612,6 +612,7 @@ export default function SearchScreen() {
 
             <ScrollView
               style={styles.modalBody}
+              contentContainerStyle={{ paddingBottom: 24 }}
               showsVerticalScrollIndicator={false}
             >
               {selected.length === 0 ? (
@@ -1067,12 +1068,17 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(11, 26, 46, 0.45)",
     justifyContent: "flex-end",
   },
+
+  modalBody: {
+    flex: 1, // <-- critical: lets the ScrollView claim remaining height and actually scroll
+  },
   modalContent: {
     backgroundColor: "white",
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
     paddingHorizontal: 20,
     paddingTop: 10,
+    paddingBottom: 20,
     maxHeight: "85%",
   },
   modalHandle: {
